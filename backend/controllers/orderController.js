@@ -1,10 +1,9 @@
 const Order = require('../models/order');
 const Product = require('../models/product');
-
 const ErrorHandler = require('../utils/errorHandler');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 
-// Create a new order   =>  /api/v1/order/new
+
 exports.newOrder = catchAsyncErrors(async (req, res, next) => {
     const {
         orderItems,
@@ -36,7 +35,6 @@ exports.newOrder = catchAsyncErrors(async (req, res, next) => {
 })
 
 
-// Get single order   =>   /api/v1/order/:id
 exports.getSingleOrder = catchAsyncErrors(async (req, res, next) => {
     const order = await Order.findById(req.params.id).populate('user', 'name email')
 
@@ -50,42 +48,44 @@ exports.getSingleOrder = catchAsyncErrors(async (req, res, next) => {
     })
 })
 
-// Get logged in user orders   =>   /api/v1/orders/me
 exports.myOrders = catchAsyncErrors(async (req, res, next) => {
-    const orders = await Order.find({ user: req.user.id })
+    try {
+        const orders = await Order.find({user: req.user.id})
 
-    res.status(200).json({
-        success: true,
-        orders
-    })
+        res.status(200).json({
+            success: true,
+            orders
+        })
+    } catch (err) {
+        next(err)
+    }
 })
 
 
-// Get all orders - ADMIN  =>   /api/v1/admin/orders/
 exports.allOrders = catchAsyncErrors(async (req, res, next) => {
-    const orders = await Order.find()
+    try {
+        const orders = await Order.find()
+        let totalAmount = 0;
+        orders.forEach(order => {
+            totalAmount += order.totalPrice
+        })
 
-    let totalAmount = 0;
-
-    orders.forEach(order => {
-        totalAmount += order.totalPrice
-    })
-
-    res.status(200).json({
-        success: true,
-        totalAmount,
-        orders
-    })
+        res.status(200).json({
+            success: true,
+            totalAmount,
+            orders
+        })
+    }catch (err){
+        next(err)
+    }
 })
 
-// Update / Process order - ADMIN  =>   /api/v1/admin/order/:id
+
 exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
     const order = await Order.findById(req.params.id)
-
     if (order.orderStatus === 'Delivered') {
         return next(new ErrorHandler('You have already delivered this order', 400))
     }
-
     order.orderItems.forEach(async item => {
         await updateStock(item.product, item.quantity)
     })
@@ -102,13 +102,11 @@ exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
 
 async function updateStock(id, quantity) {
     const product = await Product.findById(id);
-
     product.stock = product.stock - quantity;
-
-    await product.save({ validateBeforeSave: false })
+    await product.save({validateBeforeSave: false})
 }
 
-// Delete order   =>   /api/v1/admin/order/:id
+
 exports.deleteOrder = catchAsyncErrors(async (req, res, next) => {
     const order = await Order.findById(req.params.id)
 
@@ -117,8 +115,12 @@ exports.deleteOrder = catchAsyncErrors(async (req, res, next) => {
     }
 
     await order.remove()
-
     res.status(200).json({
         success: true
     })
 })
+
+
+
+
+

@@ -49,7 +49,10 @@ const productSchema = new mongoose.Schema({
                 'Beauty/Health',
                 'Sports',
                 'Outdoor',
-                'Home'
+                'Home',
+                'Flowers',
+                'Drinks',
+                'Toys'
             ],
             message: 'Please select correct category for product'
         }

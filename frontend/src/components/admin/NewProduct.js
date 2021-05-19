@@ -1,12 +1,10 @@
-import React, { Fragment, useState, useEffect } from 'react'
-
-import MetaData from '../layout/MetaData'
-import Sidebar from './Sidebar'
-
-import { useAlert } from 'react-alert'
-import { useDispatch, useSelector } from 'react-redux'
-import { newProduct, clearErrors } from '../../actions/productActions'
-import { NEW_PRODUCT_RESET } from '../../constants/productConstants'
+import React, {Fragment, useState, useEffect} from 'react';
+import MetaData from '../layout/MetaData';
+import Sidebar from './Sidebar';
+import {useAlert} from 'react-alert';
+import {useDispatch, useSelector} from 'react-redux';
+import {newProduct, clearErrors} from '../../store/actions/productActions';
+import { NEW_PRODUCT_RESET } from '../../constants/productConstants';
 
 const NewProduct = ({ history }) => {
 
@@ -31,25 +29,27 @@ const NewProduct = ({ history }) => {
         'Beauty/Health',
         'Sports',
         'Outdoor',
-        'Home'
+        'Home',
+        'Flowers',
+        'Drinks',
+        'Toys'
     ]
 
     const alert = useAlert();
     const dispatch = useDispatch();
-
-    const { loading, error, success } = useSelector(state => state.newProduct);
+    const {loading, error, success} = useSelector(state => state.newProduct);
 
     useEffect(() => {
 
         if (error) {
-            alert.error(error);
+            alert.error('Product does not created!');
             dispatch(clearErrors())
         }
 
         if (success) {
             history.push('/admin/products');
             alert.success('Product created successfully');
-            dispatch({ type: NEW_PRODUCT_RESET })
+            dispatch({type: NEW_PRODUCT_RESET})
         }
 
     }, [dispatch, alert, error, success, history])
@@ -68,20 +68,15 @@ const NewProduct = ({ history }) => {
         images.forEach(image => {
             formData.append('images', image)
         })
-
         dispatch(newProduct(formData))
     }
 
-    const onChange = e => {
-
+    const onChangeHandler = e => {
         const files = Array.from(e.target.files)
-
         setImagesPreview([]);
         setImages([])
-
         files.forEach(file => {
             const reader = new FileReader();
-
             reader.onload = () => {
                 if (reader.readyState === 2) {
                     setImagesPreview(oldArray => [...oldArray, reader.result])
@@ -92,16 +87,13 @@ const NewProduct = ({ history }) => {
             reader.readAsDataURL(file)
         })
     }
-
-
     return (
         <Fragment>
-            <MetaData title={'New Product'} />
+            <MetaData title={'New Product'}/>
             <div className="row">
                 <div className="col-12 col-md-2">
-                    <Sidebar />
+                    <Sidebar/>
                 </div>
-
                 <div className="col-12 col-md-10">
                     <Fragment>
                         <div className="wrapper my-5">
@@ -118,7 +110,6 @@ const NewProduct = ({ history }) => {
                                         onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>
-
                                 <div className="form-group">
                                     <label htmlFor="price_field">Price</label>
                                     <input
@@ -129,17 +120,17 @@ const NewProduct = ({ history }) => {
                                         onChange={(e) => setPrice(e.target.value)}
                                     />
                                 </div>
-
                                 <div className="form-group">
                                     <label htmlFor="description_field">Description</label>
-                                    <textarea className="form-control" id="description_field" rows="8" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+                                    <textarea className="form-control" id="description_field" rows="8"
+                                              value={description} onChange={(e) => setDescription(e.target.value)}/>
                                 </div>
-
                                 <div className="form-group">
                                     <label htmlFor="category_field">Category</label>
-                                    <select className="form-control" id="category_field" value={category} onChange={(e) => setCategory(e.target.value)}>
+                                    <select className="form-control" id="category_field" value={category}
+                                            onChange={(e) => setCategory(e.target.value)}>
                                         {categories.map(category => (
-                                            <option key={category} value={category} >{category}</option>
+                                            <option key={category} value={category}>{category}</option>
                                         ))}
 
                                     </select>
@@ -154,7 +145,6 @@ const NewProduct = ({ history }) => {
                                         onChange={(e) => setStock(e.target.value)}
                                     />
                                 </div>
-
                                 <div className="form-group">
                                     <label htmlFor="seller_field">Seller Name</label>
                                     <input
@@ -165,31 +155,26 @@ const NewProduct = ({ history }) => {
                                         onChange={(e) => setSeller(e.target.value)}
                                     />
                                 </div>
-
                                 <div className='form-group'>
                                     <label>Images</label>
-
                                     <div className='custom-file'>
                                         <input
                                             type='file'
                                             name='product_images'
                                             className='custom-file-input'
                                             id='customFile'
-                                            onChange={onChange}
+                                            onChange={onChangeHandler}
                                             multiple
                                         />
                                         <label className='custom-file-label' htmlFor='customFile'>
                                             Choose Images
-                                     </label>
+                                        </label>
                                     </div>
-
                                     {imagesPreview.map(img => (
-                                        <img src={img} key={img} alt="Images Preview" className="mt-3 mr-2" width="55" height="52" />
+                                        <img src={img} key={img.id} alt="Images Preview" className="mt-3 mr-2 same"/>
                                     ))}
 
                                 </div>
-
-
                                 <button
                                     id="login_button"
                                     type="submit"
@@ -198,13 +183,11 @@ const NewProduct = ({ history }) => {
                                 >
                                     CREATE
                                 </button>
-
                             </form>
                         </div>
                     </Fragment>
                 </div>
             </div>
-
         </Fragment>
     )
 }

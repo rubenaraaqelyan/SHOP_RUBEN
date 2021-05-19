@@ -1,40 +1,30 @@
-import React, { Fragment, useState } from 'react'
-import { countries } from 'countries-list'
-
+import React, {Fragment, useState} from 'react'
+import {countries} from 'countries-list'
 import MetaData from '../layout/MetaData'
 import CheckoutSteps from './CheckoutSteps'
+import {useDispatch, useSelector} from 'react-redux'
+import {saveShippingInfo} from '../../store/actions/cartActions'
 
-import { useDispatch, useSelector } from 'react-redux'
-import { saveShippingInfo } from '../../actions/cartActions'
-
-const Shipping = ({ history }) => {
-
+const Shipping = ({history}) => {
     const countriesList = Object.values(countries)
-
-    const { shippingInfo } = useSelector(state => state.cart)
-
+    const {shippingInfo} = useSelector(state => state.cart)
     const [address, setAddress] = useState(shippingInfo.address)
     const [city, setCity] = useState(shippingInfo.city)
     const [postalCode, setPostalCode] = useState(shippingInfo.postalCode)
     const [phoneNo, setPhoneNo] = useState(shippingInfo.phoneNo)
     const [country, setCountry] = useState(shippingInfo.country)
-
     const dispatch = useDispatch();
 
     const submitHandler = (e) => {
         e.preventDefault()
-
-        dispatch(saveShippingInfo({ address, city, phoneNo, postalCode, country }))
+        dispatch(saveShippingInfo({address, city, phoneNo, postalCode, country}))
         history.push('/confirm')
     }
 
     return (
-        <Fragment>
-
-            <MetaData title={'Shipping Info'} />
-
-            <CheckoutSteps shipping />
-
+        <>
+            <MetaData title={'Shipping Info'}/>
+            <CheckoutSteps shipping/>
             <div className="row wrapper">
                 <div className="col-10 col-lg-5">
                     <form className="shadow-lg" onSubmit={submitHandler}>
@@ -50,7 +40,6 @@ const Shipping = ({ history }) => {
                                 required
                             />
                         </div>
-
                         <div className="form-group">
                             <label htmlFor="city_field">City</label>
                             <input
@@ -62,7 +51,6 @@ const Shipping = ({ history }) => {
                                 required
                             />
                         </div>
-
                         <div className="form-group">
                             <label htmlFor="phone_field">Phone No</label>
                             <input
@@ -74,7 +62,6 @@ const Shipping = ({ history }) => {
                                 required
                             />
                         </div>
-
                         <div className="form-group">
                             <label htmlFor="postal_code_field">Postal Code</label>
                             <input
@@ -86,7 +73,6 @@ const Shipping = ({ history }) => {
                                 required
                             />
                         </div>
-
                         <div className="form-group">
                             <label htmlFor="country_field">Country</label>
                             <select
@@ -96,28 +82,24 @@ const Shipping = ({ history }) => {
                                 onChange={(e) => setCountry(e.target.value)}
                                 required
                             >
-
                                 {countriesList.map(country => (
                                     <option key={country.name} value={country.name}>
                                         {country.name}
                                     </option>
                                 ))}
-
                             </select>
                         </div>
-
                         <button
                             id="shipping_btn"
                             type="submit"
                             className="btn btn-block py-3"
                         >
                             CONTINUE
-                            </button>
+                        </button>
                     </form>
                 </div>
             </div>
-
-        </Fragment>
+        </>
     )
 }
 

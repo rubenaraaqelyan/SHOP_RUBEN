@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
-const Search = ({ history }) => {
 
+const Search = ({ history }) => {
     const [keyword, setKeyword] = useState('');
 
     const searchHandler = (e) => {
@@ -13,7 +13,6 @@ const Search = ({ history }) => {
             history.push('/')
         }
     }
-
     return (
         <form onSubmit={searchHandler} >
             <div className="input-group">
@@ -26,7 +25,7 @@ const Search = ({ history }) => {
                 />
                 <div className="input-group-append">
                     <button id="search_btn" className="btn">
-                        <i className="fa fa-search" aria-hidden="true"></i>
+                        <i className="fa fa-search" aria-hidden="true"/>
                     </button>
                 </div>
             </div>

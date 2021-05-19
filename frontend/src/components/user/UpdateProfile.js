@@ -1,24 +1,19 @@
 import React, { Fragment, useState, useEffect } from 'react'
-
 import MetaData from '../layout/MetaData'
-
 import { useAlert } from 'react-alert'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateProfile, loadUser, clearErrors } from '../../actions/userActions'
+import { updateProfile, loadUser, clearErrors } from '../../store/actions/userActions'
 import { UPDATE_PROFILE_RESET } from '../../constants/userConstants'
 
 const UpdateProfile = ({ history }) => {
-
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [avatar, setAvatar] = useState('')
     const [avatarPreview, setAvatarPreview] = useState('/images/default_avatar.jpg')
-
     const alert = useAlert();
     const dispatch = useDispatch();
-
     const { user } = useSelector(state => state.auth);
-    const { error, isUpdated, loading } = useSelector(state => state.user)
+    const { error, isUpdated, loading } = useSelector(state => state.user);
 
     useEffect(() => {
 
@@ -29,15 +24,14 @@ const UpdateProfile = ({ history }) => {
         }
 
         if (error) {
-            alert.error(error);
+            alert.error('Please insert your correct name and email');
             dispatch(clearErrors());
         }
 
         if (isUpdated) {
             alert.success('User updated successfully')
             dispatch(loadUser());
-
-            history.push('/me')
+            history.push('/me');
 
             dispatch({
                 type: UPDATE_PROFILE_RESET
@@ -48,7 +42,6 @@ const UpdateProfile = ({ history }) => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-
         const formData = new FormData();
         formData.set('name', name);
         formData.set('email', email);
@@ -66,19 +59,15 @@ const UpdateProfile = ({ history }) => {
                 setAvatar(reader.result)
             }
         }
-
         reader.readAsDataURL(e.target.files[0])
-
     }
     return (
-        <Fragment>
+        <>
             <MetaData title={'Update Profile'} />
-
             <div className="row wrapper">
                 <div className="col-10 col-lg-5">
                     <form className="shadow-lg" onSubmit={submitHandler} encType='multipart/form-data'>
                         <h1 className="mt-2 mb-5">Update Profile</h1>
-
                         <div className="form-group">
                             <label htmlFor="email_field">Name</label>
                             <input
@@ -90,7 +79,6 @@ const UpdateProfile = ({ history }) => {
                                 onChange={(e) => setName(e.target.value)}
                             />
                         </div>
-
                         <div className="form-group">
                             <label htmlFor="email_field">Email</label>
                             <input
@@ -102,7 +90,6 @@ const UpdateProfile = ({ history }) => {
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
-
                         <div className='form-group'>
                             <label htmlFor='avatar_upload'>Avatar</label>
                             <div className='d-flex align-items-center'>
@@ -130,12 +117,11 @@ const UpdateProfile = ({ history }) => {
                                 </div>
                             </div>
                         </div>
-
                         <button type="submit" className="btn update-btn btn-block mt-4 mb-3" disabled={loading ? true : false} >Update</button>
                     </form>
                 </div>
             </div>
-        </Fragment>
+        </>
     )
 }
 

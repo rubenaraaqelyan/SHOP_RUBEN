@@ -1,3 +1,7 @@
 export const ADD_TO_CART = 'ADD_TO_CART'
 export const REMOVE_ITEM_CART = 'REMOVE_ITEM_CART'
+export const REMOVE_ALL_CART = 'REMOVE_ALL_CART'
 export const SAVE_SHIPPING_INFO = 'SAVE_SHIPPING_INFO'
+export const FILTER_ITEM = 'FILTER_ITEM'
+export const FILTER_ITEM2 = 'FILTER_ITEM2'
+export const USER_ID = 'USER_ID'

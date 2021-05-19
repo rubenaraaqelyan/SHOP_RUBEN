@@ -1,27 +1,20 @@
 import React, { Fragment, useState, useEffect } from 'react'
-
 import MetaData from '../layout/MetaData'
-
 import { useAlert } from 'react-alert'
 import { useDispatch, useSelector } from 'react-redux'
-import { forgotPassword, clearErrors } from '../../actions/userActions'
+import { forgotPassword, clearErrors } from '../../store/actions/userActions'
 
 const ForgotPassword = () => {
-
     const [email, setEmail] = useState('')
-
     const alert = useAlert();
     const dispatch = useDispatch();
-
     const { error, loading, message } = useSelector(state => state.forgotPassword)
 
     useEffect(() => {
-
         if (error) {
-            alert.error(error);
+            alert.error('User not found with this email!');
             dispatch(clearErrors());
         }
-
         if (message) {
             alert.success(message)
         }
@@ -30,17 +23,14 @@ const ForgotPassword = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-
         const formData = new FormData();
         formData.set('email', email);
-
         dispatch(forgotPassword(formData))
     }
 
     return (
-        <Fragment>
+        <>
             <MetaData title={'Forgot Password'} />
-
             <div className="row wrapper">
                 <div className="col-10 col-lg-5">
                     <form className="shadow-lg" onSubmit={submitHandler}>
@@ -55,7 +45,6 @@ const ForgotPassword = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
-
                         <button
                             id="forgot_password_button"
                             type="submit"
@@ -63,12 +52,10 @@ const ForgotPassword = () => {
                             disabled={loading ? true : false} >
                             Send Email
                     </button>
-
                     </form>
                 </div>
             </div>
-
-        </Fragment>
+        </>
     )
 }
 
